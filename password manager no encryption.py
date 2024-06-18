@@ -1,48 +1,53 @@
-# Uncomment the following line to enable master password prompt
-# master_pass = input("Please enter your master password:\n")
+# Prompt the user to enter the master password
+master_pass = input("please enter your master password:")
 
-# Function to add a new username and password to the credentials file
+# Define the function to add new credentials
 def add():
-    # Prompt user for username
-    user_name = input("Please enter your username: ")
-    # Prompt user for password
-    password = input("Please enter your password: ")
-    # Open the credentials file in append mode and write the username and password
+    # Prompt the user to enter a username and password
+    username = input("please enter the username:").lower()
+    password = input("please enter the password:").lower()
+    # Open the credentials file in append mode and write the new credentials
     with open('credentials.txt', 'a') as f:
-        f.write(user_name + "|" + password + "\n")
+        f.write(username + ',' + password + "\n")
 
-# Function to view all stored usernames and passwords
+# Define the function to view stored credentials
 def view():
     try:
         # Open the credentials file in read mode
         with open('credentials.txt', 'r') as f:
-            # Read each line in the file
-            for line in f.readlines():
-                # Strip any leading/trailing whitespace characters
+            for line in f:
+                # Strip any whitespace from the line and split it into username and password
                 data = line.strip()
-                # Split the line into username and password
-                user, passw = data.split("|")
+                user, passw = data.split(",")
                 # Print the username and password
-                print("Username:", user, ",", "Password:", passw)
-    except FileNotFoundError:
-        # If the file does not exist, print an error message and quit
-        print("The file you are looking for does not exist!")
-        quit()
+                print("Username:" + user, ",", "Password:" + passw)
+    except:
+        # Handle the case where the file is not available
+        print("file is not available.")
+        user_action()
 
-# Main loop to prompt user for mode and call the corresponding function
-while True:
-    # Prompt user to enter mode (view or add)
-    mode = input("Please enter your mode (view/add): ").lower()
-    # If user enters 'q', break the loop and exit
-    if mode == "q":
-        break
-    # If mode is 'view', call the view function
-    if mode == "view":
-        view()
-    # If mode is 'add', call the add function
-    elif mode == "add":
-        add()
-    # If user enters an invalid mode, print an error message
-    else:
-        print("Enter a valid value.")
-        continue
+# Define the main function for user actions
+def user_action():
+    while True:
+        try:
+            # Prompt the user to choose an action: add, view, or quit
+            ask_for_option = input("Please enter add to add, view to view and q for quit:").lower()
+            if ask_for_option == "q":
+                # Exit the program if the user chooses to quit
+                quit()
+            elif ask_for_option == "add":
+                # Call the add function if the user chooses to add credentials
+                add()
+            elif ask_for_option == "view":
+                # Call the view function if the user chooses to view credentials
+                view()
+            else:
+                # Prompt the user to enter a valid value if the input is invalid
+                print("Please enter a valid value.")
+                continue
+        except:
+            # Exit the program in case of an unexpected error
+            quit()
+
+# Start the user action function
+user_action()
